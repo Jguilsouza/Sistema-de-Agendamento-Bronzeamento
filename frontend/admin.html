@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7B4F28" />
+  <title>Admin – Iluminada Bronze</title>
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>" />
+</head>
+<body class="admin-layout">
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  LOGIN                                                                    -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <h2>Painel Administrativo</h2>
+    <p>Iluminada Bronze – acesso restrito</p>
+
+    <form id="form-login" novalidate>
+      <div class="form-group">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" placeholder="admin@iluminadabronze.com" autocomplete="email" required />
+      </div>
+      <div class="form-group" style="margin-bottom:1.25rem">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+
+      <div class="alert" id="alert-login"></div>
+
+      <button class="btn btn-primary" id="btn-login" type="submit">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  DASHBOARD                                                                -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="dashboard-screen">
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="brand">
+      <span>☀️</span>
+      <div>
+        <h1>Iluminada Bronze</h1>
+        <p>Painel de Agendamentos</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <a href="clientes.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border:1.5px solid var(--bronze);border-radius:8px;color:var(--bronze);font-size:.85rem;font-weight:700;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='var(--bronze)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--bronze)'">
+        👥 Clientes
+      </a>
+      <a href="relatorio.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border:1.5px solid var(--bronze);border-radius:8px;color:var(--bronze);font-size:.85rem;font-weight:700;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='var(--bronze)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--bronze)'">
+        📊 Relatório
+      </a>
+      <button class="btn-logout" id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <!-- Abas de navegação -->
+  <nav class="admin-tabs">
+    <button class="tab-btn active" data-tab="agendamentos">📅 Agendamentos</button>
+    <button class="tab-btn" data-tab="horarios">🕐 Horários Disponíveis</button>
+    <button class="tab-btn" data-tab="bloqueios">🚫 Dias Sem Atendimento</button>
+    <button class="tab-btn" data-tab="slots">🔒 Bloquear Horário</button>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="dashboard-content">
+
+    <!-- Métricas -->
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">📅</div>
+        <div class="metric-value" id="m-total">—</div>
+        <div class="metric-label">Total hoje</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">🧍</div>
+        <div class="metric-value" id="m-pe">—</div>
+        <div class="metric-label">Em Pé hoje</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">☀️</div>
+        <div class="metric-value" id="m-deitado">—</div>
+        <div class="metric-label">Bronze de Sol hoje</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">🧍☀️</div>
+        <div class="metric-value" id="m-carioca">—</div>
+        <div class="metric-label">Bronze Carioca hoje</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">❌</div>
+        <div class="metric-value" id="m-cancelados">—</div>
+        <div class="metric-label">Cancelados hoje</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-card">
+      <h3>🔎 Filtros</h3>
+      <div class="filters-row">
+        <div class="filter-group">
+          <label for="f-data">Data</label>
+          <input type="date" id="f-data" />
+        </div>
+        <div class="filter-group">
+          <label for="f-tipo">Tipo</label>
+          <select id="f-tipo">
+            <option value="">Todos</option>
+            <option value="pe">Bronze em Pé</option>
+            <option value="deitado">Bronze de Sol</option>
+            <option value="carioca">Bronze Carioca</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="f-status">Status</label>
+          <select id="f-status">
+            <option value="">Todos</option>
+            <option value="confirmado">Confirmado</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div class="filter-group" style="min-width:160px">
+          <label for="f-nome">Nome do cliente</label>
+          <input type="text" id="f-nome" placeholder="Buscar por nome..." style="padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem;width:100%" />
+        </div>
+        <button class="btn-filter" id="btn-filtrar">Filtrar</button>
+        <button class="btn-clear-filters" id="btn-limpar">Limpar</button>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <h3>Agendamentos</h3>
+        <span class="table-count" id="table-count">0 registros</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="tabela-agendamentos" aria-label="Lista de agendamentos">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Telefone</th>
+              <th>CPF</th>
+              <th>Tipo</th>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Status</th>
+              <th>Presença</th>
+              <th>Cadastrado em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body">
+            <tr>
+              <td colspan="10">
+                <div class="table-loading">
+                  <div class="spinner"></div><br>Carregando agendamentos...
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <div class="pagination" id="paginacao">
+        <button class="page-btn" id="btn-pag-prev" disabled>‹ Anterior</button>
+        <span class="page-info" id="page-info">Pág. 1</span>
+        <button class="page-btn" id="btn-pag-next">Próxima ›</button>
+      </div>
+    </div>
+
+    <!-- ══ ABA: HORÁRIOS ══════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-horarios" style="display:none">
+
+      <div class="table-card" style="margin-bottom:1.25rem">
+        <div class="table-card-header">
+          <h3>🕐 Horários de Atendimento</h3>
+          <button class="btn-filter" id="btn-add-horario">+ Adicionar</button>
+        </div>
+
+        <!-- Formulário inline de adição -->
+        <div id="form-horario-wrapper" style="display:none;padding:1.25rem;border-bottom:1.5px solid var(--gray-200)">
+          <div class="filters-row" style="align-items:flex-end;gap:.75rem">
+            <div class="filter-group">
+              <label>Tipo</label>
+              <select id="h-tipo">
+                <option value="pe">Bronze em Pé</option>
+                <option value="deitado">Bronze de Sol</option>
+                <option value="carioca">Bronze Carioca</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Dia da semana</label>
+              <select id="h-dia">
+                <option value="">Todos os dias</option>
+                <option value="0">Segunda-feira</option>
+                <option value="1">Terça-feira</option>
+                <option value="2">Quarta-feira</option>
+                <option value="3">Quinta-feira</option>
+                <option value="4">Sexta-feira</option>
+                <option value="5">Sábado</option>
+                <option value="6">Domingo</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Horário</label>
+              <input type="time" id="h-hora" step="1800" />
+            </div>
+            <div class="filter-group" style="max-width:100px">
+              <label>Vagas</label>
+              <input type="number" id="h-vagas" value="20" min="1" max="100" style="padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem" />
+            </div>
+            <button class="btn-filter" id="btn-salvar-horario">Salvar</button>
+            <button class="btn-clear-filters" id="btn-cancelar-horario">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo</th><th>Dia</th><th>Horário</th><th>Vagas</th><th>Status</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-horarios"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ ABA: DIAS BLOQUEADOS ═══════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-bloqueios" style="display:none">
+
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>🚫 Dias sem Atendimento</h3>
+          <button class="btn-filter" id="btn-add-bloqueio">+ Adicionar</button>
+        </div>
+
+        <!-- Formulário inline -->
+        <div id="form-bloqueio-wrapper" style="display:none;padding:1.25rem;border-bottom:1.5px solid var(--gray-200)">
+          <div class="filters-row" style="flex-wrap:wrap;gap:.75rem;align-items:flex-end">
+            <div class="filter-group">
+              <label>Tipo de bloqueio</label>
+              <select id="b-tipo">
+                <option value="dia_semana">Todos os dias <dia> da semana</option>
+                <option value="ultimo_dia_semana_mes">Último dia<dia> do mês</option>
+                <option value="data_especifica">Data específica</option>
+              </select>
+            </div>
+            <div class="filter-group" id="b-dia-group">
+              <label>Dia da semana</label>
+              <select id="b-dia">
+                <option value="0">Segunda-feira</option>
+                <option value="1">Terça-feira</option>
+                <option value="2">Quarta-feira</option>
+                <option value="3">Quinta-feira</option>
+                <option value="4">Sexta-feira</option>
+                <option value="5">Sábado</option>
+                <option value="6">Domingo</option>
+              </select>
+            </div>
+            <div class="filter-group" id="b-data-group" style="display:none">
+              <label>Data específica</label>
+              <input type="date" id="b-data" />
+            </div>
+            <div class="filter-group">
+              <label>Motivo (opcional)</label>
+              <input type="text" id="b-motivo" placeholder="Ex: Feriado nacional" style="padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem;width:100%" />
+            </div>
+            <button class="btn-filter" id="btn-salvar-bloqueio">Salvar</button>
+            <button class="btn-clear-filters" id="btn-cancelar-bloqueio">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Tipo</th><th>Dia / Data</th><th>Motivo</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="tbody-bloqueios"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ ABA: BLOQUEIO DE SLOTS ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-slots" style="display:none">
+
+      <div class="table-card" style="margin-bottom:1.25rem">
+        <div class="table-card-header">
+          <h3>🔒 Bloquear Horários Pontuais</h3>
+        </div>
+        <p style="padding:0 1.25rem 1rem;color:#666;font-size:0.9rem;">
+          Use esta aba para bloquear horários específicos em uma data — por exemplo, quando a atendente
+          sair mais cedo ou tiver um compromisso pontual.
+        </p>
+
+        <!-- Formulário de bloqueio -->
+        <div style="padding:0 1.25rem 1.25rem;display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+
+          <div class="filter-group">
+            <label>Data</label>
+            <input type="date" id="slot-data" style="width:100%;padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem" />
+          </div>
+
+          <div class="filter-group">
+            <label>Serviço</label>
+            <select id="slot-tipo" style="width:100%;padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem">
+              <option value="">Todos os serviços</option>
+              <option value="pe">Bronze em Pé</option>
+              <option value="deitado">Bronze de Sol</option>
+              <option value="carioca">Bronze Carioca</option>
+            </select>
+          </div>
+
+          <div class="filter-group" style="align-self:end">
+            <button class="btn-filter" id="btn-carregar-slots" style="width:100%">Ver horários do dia</button>
+          </div>
+
+        </div>
+
+        <!-- Grid de slots disponíveis -->
+        <div id="slots-resultado" style="padding:0 1.25rem 1.25rem;display:none">
+
+          <div id="slots-loading" style="display:none;color:#888;padding:.5rem 0;">Carregando...</div>
+
+          <p style="font-size:.9rem;color:#555;margin-bottom:.75rem;">
+            Selecione os horários que deseja <strong>bloquear</strong> nesta data.
+            Clique em <em>Bloquear dia inteiro</em> para bloquear todos os horários de uma vez.
+          </p>
+
+          <div id="slots-grid" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;"></div>
+
+          <div class="filter-group" style="max-width:360px;margin-bottom:1rem">
+            <label>Motivo (opcional)</label>
+            <input type="text" id="slot-motivo" placeholder="Ex: Saída antecipada" style="width:100%;padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem" />
+          </div>
+
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+            <button class="btn-filter" id="btn-bloquear-selecionados" disabled>🔒 Bloquear selecionados</button>
+            <button class="btn-clear-filters" id="btn-bloquear-dia-inteiro">🚫 Bloquear dia inteiro</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de slots já bloqueados -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>Bloqueios pontuais cadastrados</h3>
+          <button class="btn-clear-filters" id="btn-atualizar-slots-list" style="font-size:.82rem">↻ Atualizar</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Serviço</th><th>Horário</th><th>Motivo</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="tbody-slots"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal de confirmação de cancelamento -->
+<div class="modal-overlay" id="modal-cancelar" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <h3 id="modal-titulo">Cancelar agendamento?</h3>
+    <p id="modal-desc">Esta ação não pode ser desfeita. O agendamento será marcado como cancelado.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btn-modal-nao">Não, manter</button>
+      <button class="btn-modal-confirm" id="btn-modal-sim">Sim, cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirmar Presença -->
+<div class="modal-overlay" id="modal-presenca" role="dialog" aria-modal="true" aria-labelledby="mp-titulo">
+  <div class="modal-box">
+    <div class="modal-icon">✅</div>
+    <h3 id="mp-titulo">Confirmar Presença</h3>
+    <p id="mp-desc">Selecione a forma de pagamento utilizada.</p>
+    <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:1rem 0">
+      <button class="btn-pagto" data-pagto="cartao"  id="btn-pagto-cartao">💳 Cartão</button>
+      <button class="btn-pagto" data-pagto="dinheiro" id="btn-pagto-dinheiro">💵 Dinheiro</button>
+      <button class="btn-pagto" data-pagto="pix"     id="btn-pagto-pix">📱 Pix</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btn-mp-cancelar">Fechar</button>
+      <button class="btn-modal-confirm" id="btn-mp-confirmar" disabled>✓ Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast de notificação -->
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

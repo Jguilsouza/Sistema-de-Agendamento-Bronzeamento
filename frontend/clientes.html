@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7B4F28" />
+  <title>Clientes – Iluminada Bronze</title>
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>" />
+  <style>
+    body { background: var(--bg); min-height: 100vh; }
+
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem 3rem;
+    }
+
+    /* ── Cabeçalho ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem 0 1.25rem;
+      border-bottom: 1.5px solid var(--gray-200);
+      margin-bottom: 1.75rem;
+    }
+
+    .page-header-left { display: flex; align-items: center; gap: 1rem; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: .35rem;
+      color: var(--bronze); font-weight: 600; font-size: .88rem;
+      text-decoration: none; padding: .45rem .85rem;
+      border: 1.5px solid var(--bronze); border-radius: 8px;
+      transition: all .2s;
+    }
+    .back-link:hover { background: var(--bronze); color: #fff; }
+
+    .page-title { font-size: 1.35rem; font-weight: 700; color: var(--bronze-dark); margin: 0; }
+    .page-sub   { font-size: .85rem; color: var(--text-light); margin: 0; }
+
+    /* ── Busca ── */
+    .busca-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .busca-card h3 {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+      color: var(--bronze-dark);
+    }
+
+    .busca-row {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .busca-input {
+      flex: 1;
+      min-width: 220px;
+      padding: .6rem .9rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: .95rem;
+      transition: border-color .2s;
+    }
+    .busca-input:focus { outline: none; border-color: var(--bronze); }
+
+    .btn-buscar {
+      background: var(--bronze);
+      color: #fff; border: none;
+      border-radius: var(--radius-sm);
+      padding: .62rem 1.4rem;
+      font-size: .92rem; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-buscar:hover  { background: var(--bronze-dark); }
+    .btn-buscar:disabled { opacity: .6; cursor: not-allowed; }
+
+    .btn-limpar-busca {
+      background: transparent;
+      color: var(--text-light);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: .6rem .9rem;
+      font-size: .88rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-limpar-busca:hover { border-color: #aaa; color: var(--text); }
+
+    /* ── Seção de inativos ── */
+    .inativos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .inativos-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #c0392b;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .badge-inativos {
+      background: #fde8e8;
+      color: #c0392b;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      margin-left: .4rem;
+    }
+
+    .aviso-inativos {
+      background: #fff8f0;
+      border: 1.5px solid #f5c97a;
+      border-radius: 10px;
+      padding: .85rem 1.1rem;
+      font-size: .88rem;
+      color: #7B4F28;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    /* ── Tabela de clientes ── */
+    .clientes-table-wrap {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+    }
+
+    .clientes-table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1.5px solid var(--gray-200);
+    }
+
+    .clientes-table-header h3 { margin: 0; font-size: .95rem; color: var(--bronze-dark); }
+    .count-badge {
+      font-size: .8rem;
+      color: var(--text-light);
+      background: var(--gray-200);
+      padding: .2rem .7rem;
+      border-radius: 20px;
+    }
+
+    table.clientes-tbl { width: 100%; border-collapse: collapse; }
+    table.clientes-tbl th {
+      background: #fdf8f2;
+      color: var(--bronze-dark);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      padding: .75rem 1rem;
+      text-align: left;
+      border-bottom: 1.5px solid var(--gray-200);
+      white-space: nowrap;
+    }
+    table.clientes-tbl td {
+      padding: .85rem 1rem;
+      font-size: .88rem;
+      color: var(--text);
+      border-bottom: 1px solid #f5f0ea;
+      vertical-align: middle;
+    }
+    table.clientes-tbl tr:last-child td { border-bottom: none; }
+    table.clientes-tbl tr:hover td { background: #fdf8f2; }
+
+    /* Linha de inativo */
+    table.clientes-tbl tr.inativo-row td { background: #fff8f8; }
+    table.clientes-tbl tr.inativo-row:hover td { background: #ffeeee; }
+
+    .dias-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .dias-badge.ok     { background: #e8f5e9; color: #2e7d32; }
+    .dias-badge.alerta { background: #fff3e0; color: #e65100; }
+    .dias-badge.critico{ background: #fde8e8; color: #c0392b; }
+    .dias-badge.ativo  { background: #e3f0ff; color: #1565c0; font-weight: 700; }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: .35rem .75rem;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-whatsapp:hover { background: #1da851; }
+
+    .btn-hist {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: transparent;
+      color: var(--bronze);
+      border: 1.5px solid var(--bronze);
+      border-radius: 7px;
+      padding: .33rem .7rem;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn-hist:hover { background: var(--bronze); color: #fff; }
+
+    /* ── Empty / loading ── */
+    .estado-vazio {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #aaa;
+    }
+    .estado-vazio .icon { font-size: 2.2rem; display: block; margin-bottom: .5rem; }
+
+    .estado-loading {
+      display: flex; align-items: center; justify-content: center; gap: .75rem;
+      padding: 2.5rem; color: #888;
+    }
+
+    /* ── Modal de histórico ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 540px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    }
+
+    .modal-box h3 { margin: 0 0 .25rem; color: var(--bronze-dark); font-size: 1.1rem; }
+    .modal-box .modal-sub { font-size: .83rem; color: var(--text-light); margin-bottom: 1.25rem; }
+
+    .modal-close {
+      float: right;
+      background: none; border: none;
+      font-size: 1.4rem; cursor: pointer;
+      color: #aaa; line-height: 1;
+      margin-top: -.2rem;
+    }
+    .modal-close:hover { color: #555; }
+
+    .hist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .65rem .85rem;
+      border-radius: 8px;
+      background: #fdf8f2;
+      margin-bottom: .5rem;
+      font-size: .88rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hist-item .tipo { font-weight: 700; color: var(--bronze-dark); }
+    .hist-item .data { color: #555; }
+    .hist-badge {
+      font-size: .72rem; font-weight: 700; padding: .2rem .6rem;
+      border-radius: 20px;
+    }
+    .hist-badge.confirmado { background: #e6f4ea; color: #2e7d32; }
+    .hist-badge.cancelado  { background: #fce4ec; color: #c62828; }
+  </style>
+</head>
+<body class="admin-layout">
+
+<div class="page-wrap">
+
+  <!-- ── Cabeçalho ── -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <a href="admin.html" class="back-link">← Painel</a>
+      <div>
+        <h1 class="page-title">👥 Clientes</h1>
+        <p class="page-sub">Consulta e acompanhamento de clientes</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Busca ── -->
+  <div class="busca-card">
+    <h3>🔍 Buscar cliente</h3>
+    <div class="busca-row">
+      <input
+        type="text"
+        id="busca-input"
+        class="busca-input"
+        placeholder="Digite o nome ou CPF do cliente..."
+        autocomplete="off"
+        maxlength="80"
+      />
+      <button class="btn-buscar" id="btn-buscar">Buscar</button>
+      <button class="btn-limpar-busca" id="btn-limpar-busca">Limpar</button>
+    </div>
+  </div>
+
+  <!-- ── Resultados de busca (visível só quando há busca) ── -->
+  <div id="resultado-busca" style="display:none;">
+    <div class="clientes-table-wrap">
+      <div class="clientes-table-header">
+        <h3>Resultados da busca</h3>
+        <span class="count-badge" id="count-busca">0 clientes</span>
+      </div>
+      <div id="tabela-busca-wrap">
+        <div class="estado-loading" id="loading-busca" style="display:none">
+          <div class="spinner"></div><span>Buscando...</span>
+        </div>
+        <table class="clientes-tbl">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>CPF</th>
+              <th>Telefone</th>
+              <th>Último agendamento</th>
+              <th>Sem agendar</th>
+              <th>Total</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-busca"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Clientes inativos ── -->
+  <div class="inativos-header">
+    <div class="inativos-title">
+      ⚠️ Clientes inativos
+      <span class="badge-inativos" id="badge-inativos">0</span>
+    </div>
+  </div>
+
+  <div class="aviso-inativos">
+    📋 Abaixo estão os clientes que <strong>não agendaram nos últimos 2 meses</strong>.
+    Considere entrar em contato para reativá-los!
+  </div>
+
+  <div class="clientes-table-wrap">
+    <div class="clientes-table-header">
+      <h3 style="color:#c0392b;">Clientes sem visita há mais de 60 dias</h3>
+      <span class="count-badge" id="count-inativos" style="background:#fde8e8;color:#c0392b">0 clientes</span>
+    </div>
+    <div id="loading-inativos" class="estado-loading" style="display:none">
+      <div class="spinner"></div><span>Carregando...</span>
+    </div>
+    <table class="clientes-tbl">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>CPF</th>
+          <th>Telefone</th>
+          <th>Último agendamento</th>
+          <th>Sem agendar</th>
+          <th>Total de visitas</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-inativos"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ── Modal: histórico do cliente ── -->
+<div class="modal-overlay" id="modal-hist" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <button class="modal-close" id="btn-fechar-hist" aria-label="Fechar">×</button>
+    <h3 id="hist-nome">Histórico</h3>
+    <p class="modal-sub" id="hist-cpf"></p>
+    <div id="hist-lista"></div>
+  </div>
+</div>
+
+<script type="module" src="js/clientes.js"></script>
+</body>
+</html>

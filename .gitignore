@@ -1,0 +1,54 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .gitignore — Iluminada Bronze
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Ambientes virtuais (manter localmente para testes, não subir)
+venv/
+.venv/
+env/
+ENV/
+
+# ── Variáveis de ambiente (NUNCA commitar — contém senhas e chaves!) ──────────
+.env
+backend/.env
+
+# ── Migrations SQL (já executadas no Supabase) ────────────────────────────────
+backend/migrations/
+
+# ── Alembic ───────────────────────────────────────────────────────────────────
+alembic/versions/*.py.bak
+
+# ── Distribuição Python ───────────────────────────────────────────────────────
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+node_modules/
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Sistema operacional ───────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── Logs locais ───────────────────────────────────────────────────────────────
+*.log
+logs/

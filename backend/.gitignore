@@ -1,0 +1,32 @@
+# Ambiente virtual
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Variáveis de ambiente (NUNCA commitar!)
+.env
+
+# Alembic
+alembic/versions/*.py.bak
+
+# Migrations SQL (já executadas no Supabase, não precisam subir)
+migrations/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# Distribuição
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db

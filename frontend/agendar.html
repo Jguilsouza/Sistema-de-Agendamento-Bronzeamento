@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7B4F28" />
+  <title>Agendar – Iluminada Bronze</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>" />
+  <style>
+    .header {
+      background-image: url('Iluminada_logo.png') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      min-height: 220px !important;
+      padding: 10rem 1.5rem 3rem !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────────── -->
+<header class="header">
+  <!-- <h1>☀️ Iluminada Bronze</h1> -->
+  <p>Faça seu agendamento em poucos passos</p>
+</header>
+
+<!-- ── Progresso ───────────────────────────────────────────────────────────────── -->
+<div class="container">
+  <nav class="progress-bar" aria-label="Etapas">
+    <div class="progress-dot active" id="dot-1"></div>
+    <div class="progress-dot" id="dot-2"></div>
+    <div class="progress-dot" id="dot-3"></div>
+  </nav>
+
+  <!-- STEP 1 – Tipo de bronze -->
+  <section class="step active" id="step-1" aria-label="Etapa 1: Escolha o serviço">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <h2 class="step-title">Escolha o tipo de bronzeamento</h2>
+    </div>
+
+    <div class="tipo-options" role="group" aria-label="Tipos de bronzeamento">
+      <button class="tipo-card" data-tipo="pe" role="radio" aria-checked="false" tabindex="0">
+        <span class="icon">🧍</span>
+        <span class="label">Bronze em Pé</span>
+      </button>
+      <button class="tipo-card" data-tipo="deitado" role="radio" aria-checked="false" tabindex="0">
+        <span class="icon">☀️</span>
+        <span class="label">Bronze de Sol</span>
+      </button>
+      <button class="tipo-card" data-tipo="carioca" role="radio" aria-checked="false" tabindex="0">
+        <span class="icon">🧍☀️</span>
+        <span class="label">Bronze Carioca</span>
+      </button>
+    </div>
+
+    <div class="alert" id="alert-step1"></div>
+
+    <button class="btn btn-primary" id="btn-next-1" disabled style="margin-top:1.5rem">
+      Próximo <span>→</span>
+    </button>
+
+    <!-- Link reagendar -->
+    <div style="text-align:center;margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid #f0e8dc;">
+      <span style="font-size:.85rem;color:#999;">Já tem um agendamento?</span>
+      <a href="reagendar.html" style="display:inline-flex;align-items:center;gap:.3rem;font-size:.88rem;color:#7B4F28;font-weight:700;text-decoration:underline;margin-left:.35rem;">
+        📅 Reagendar/Cancelar Horário
+      </a>
+    </div>
+  </section>
+
+  <!-- STEP 2 – Data e horário -->
+  <section class="step" id="step-2" aria-label="Etapa 2: Escolha data e horário">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <h2 class="step-title">Selecione data e horário</h2>
+    </div>
+
+    <div class="date-picker-wrapper" style="margin-bottom:1.25rem">
+      <button class="date-nav-btn" id="btn-date-prev" title="Dia anterior" aria-label="Dia anterior">‹</button>
+      <input type="date" id="data-input" aria-label="Data do agendamento" />
+      <button class="date-nav-btn" id="btn-date-next" title="Próximo dia" aria-label="Próximo dia">›</button>
+    </div>
+
+    <div id="horarios-container" aria-live="polite">
+      <p class="loading-horarios" id="horarios-placeholder">
+        Selecione uma data para ver os horários disponíveis.
+      </p>
+      <div class="horarios-grid" id="horarios-grid" style="display:none"></div>
+    </div>
+
+    <div class="alert" id="alert-step2" style="margin-top:1rem"></div>
+
+    <div style="display:flex;gap:.75rem;margin-top:1.5rem">
+      <button class="btn btn-secondary" id="btn-back-1" style="flex:1;margin-top:0">← Voltar</button>
+      <button class="btn btn-primary" id="btn-next-2" disabled style="flex:2">Próximo →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 – Dados do cliente -->
+  <section class="step" id="step-3" aria-label="Etapa 3: Seus dados">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <h2 class="step-title">Seus dados</h2>
+    </div>
+
+    <!-- Resumo do agendamento -->
+    <div class="resumo-box" id="resumo-box">
+      <div class="resumo-row">
+        <span class="resumo-label">Serviço</span>
+        <span class="resumo-valor" id="resumo-tipo">—</span>
+      </div>
+      <div class="resumo-row">
+        <span class="resumo-label">Data</span>
+        <span class="resumo-valor" id="resumo-data">—</span>
+      </div>
+      <div class="resumo-row">
+        <span class="resumo-label">Horário</span>
+        <span class="resumo-valor" id="resumo-hora">—</span>
+      </div>
+    </div>
+
+    <form id="form-dados" novalidate>
+      <div class="form-group">
+        <label for="nome">Nome completo *</label>
+        <input type="text" id="nome" placeholder="Ex.: Maria Silva" autocomplete="name" required />
+        <span class="field-error" id="err-nome"></span>
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone / WhatsApp *</label>
+        <input type="tel" id="telefone" placeholder="(27) 98856-8956" autocomplete="tel" inputmode="numeric" maxlength="15" required />
+        <span class="field-hint" id="hint-tel">DDD (2 dígitos) + 9 dígitos &nbsp;·&nbsp; Ex: (27) 98856-8956</span>
+        <span class="field-error" id="err-tel"></span>
+      </div>
+      <div class="form-group">
+        <label for="cpf">CPF *</label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" required />
+        <span class="field-error" id="err-cpf"></span>
+      </div>
+    </form>
+
+    <div class="alert" id="alert-step3"></div>
+
+    <div style="display:flex;gap:.75rem;margin-top:1rem">
+      <button class="btn btn-secondary" id="btn-back-2" style="flex:1;margin-top:0">← Voltar</button>
+      <button class="btn btn-primary" id="btn-confirmar" style="flex:2" type="submit">
+        Confirmar Agendamento ✓
+      </button>
+    </div>
+  </section>
+
+  <!-- Tela de sucesso -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🌟</div>
+    <h2>Agendamento confirmado!</h2>
+    <p>Você está na nossa lista. Te esperamos na Iluminada Bronze!</p>
+
+    <div class="success-card" id="success-card">
+      <div class="success-row">
+        <span class="s-label">Serviço</span>
+        <span class="s-value" id="s-tipo">—</span>
+      </div>
+      <div class="success-row">
+        <span class="s-label">Data</span>
+        <span class="s-value" id="s-data">—</span>
+      </div>
+      <div class="success-row">
+        <span class="s-label">Horário</span>
+        <span class="s-value" id="s-hora">—</span>
+      </div>
+      <div class="success-row">
+        <span class="s-label">Nome</span>
+        <span class="s-value" id="s-nome">—</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-novo-agendamento">
+      ☀️ Fazer outro agendamento
+    </button>
+    <a class="btn btn-outline" href="https://wa.me" id="btn-whatsapp" style="margin-top:.75rem">
+      Voltar ao WhatsApp
+    </a>
+  </div>
+
+</div><!-- /container -->
+
+<script type="module" src="js/agendar.js"></script>
+</body>
+</html>
