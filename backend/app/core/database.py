@@ -5,12 +5,21 @@ from app.core.config import get_settings
 
 settings = get_settings()
 
+
+_connect_args: dict = {}
+if "supabase.com" in settings.DATABASE_URL or "neon.tech" in settings.DATABASE_URL:
+    _connect_args = {
+        "ssl": "require",
+        "statement_cache_size": 0,  # necessário para o Transaction Pooler (porta 6543)
+    }
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     pool_pre_ping=True,
     pool_size=5,
     max_overflow=10,
+    connect_args=_connect_args,
 )
 
 AsyncSessionLocal = async_sessionmaker(
